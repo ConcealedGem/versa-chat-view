@@ -76,7 +76,7 @@ export function CanvasViewer() {
   }
 
   // 自定义代码块渲染组件
-  const CodeBlock = ({ children, className, ...props }: any) => {
+  const CodeBlock = ({ children, className, ...props }: { children?: React.ReactNode; className?: string }) => {
     const match = /language-(\w+)/.exec(className || '')
     const language = match ? match[1] : ''
     

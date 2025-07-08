@@ -39,7 +39,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
   const fetchAssistants = useCallback(async () => {
     try {
       console.log('开始获取助手列表...')
-      const response = await fetch('http://localhost:8000/api/assistants')
+      const response = await fetch('/api/assistants')
       const data: AssistantsResponse = await response.json()
       
       console.log('助手 API 响应:', data)
@@ -115,7 +115,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
   // 切换助手
   const switchAssistant = useCallback(async (assistantId: string) => {
     try {
-      const response = await fetch('http://localhost:8000/api/assistants/switch', {
+      const response = await fetch('/api/assistants/switch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
         
         // 获取切换后的助手信息并通知父组件
         try {
-          const assistantResponse = await fetch('http://localhost:8000/api/assistants')
+          const assistantResponse = await fetch('/api/assistants')
           const assistantData = await assistantResponse.json()
           
           if (assistantData.success && assistantData.data.active) {

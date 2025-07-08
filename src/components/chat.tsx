@@ -107,7 +107,7 @@ export function Chat({
   // 获取当前助手信息
   const fetchCurrentAssistant = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/assistants')
+      const response = await fetch('/api/assistants')
       const data = await response.json()
       
       if (data.success && data.data.active) {
