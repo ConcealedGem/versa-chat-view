@@ -35,7 +35,7 @@ const CodeBlock: React.FC<{
   // 内联代码样式
   if (inline) {
     return (
-      <code className="bg-gray-100 dark:bg-gray-800 text-red-600 dark:text-red-400 rounded px-1.5 py-0.5 text-sm font-mono">
+      <code className="bg-gray-100 dark:bg-gray-800 text-red-600 dark:text-red-400 rounded px-1.5 py-0.5 text-xs font-mono">
         {children}
       </code>
     );
@@ -46,7 +46,7 @@ const CodeBlock: React.FC<{
     <div className="relative group my-4">
       {/* 代码块头部 */}
       <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-t-lg border-b dark:border-gray-700">
-        <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+        <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
           {language || '代码'}
         </span>
         <button
@@ -74,7 +74,7 @@ const CodeBlock: React.FC<{
       </div>
       
       {/* 代码内容 */}
-      <pre className="bg-gray-900 text-green-400 p-4 rounded-b-lg overflow-x-auto text-sm leading-relaxed">
+      <pre className="bg-gray-900 text-green-400 p-4 rounded-b-lg overflow-x-auto text-xs leading-relaxed">
         <code className="font-mono whitespace-pre">
           {children}
         </code>
@@ -119,19 +119,19 @@ export const markdownComponents: Components = {
   },
   p: ({ children }) => <p className="mb-2">{children}</p>,
   h1: ({ children }) => (
-    <h1 className="text-2xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">{children}</h1>
+    <h1 className="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">{children}</h1>
   ),
   h2: ({ children }) => (
-    <h2 className="text-xl font-bold mb-3 border-b border-gray-200 dark:border-gray-700 pb-1">{children}</h2>
+    <h2 className="text-lg font-bold mb-3 border-b border-gray-200 dark:border-gray-700 pb-1">{children}</h2>
   ),
   h3: ({ children }) => (
-    <h3 className="text-lg font-bold mb-2">{children}</h3>
+    <h3 className="text-base font-bold mb-2">{children}</h3>
   ),
   h4: ({ children }) => (
-    <h4 className="text-base font-bold mb-2">{children}</h4>
+    <h4 className="text-sm font-bold mb-2">{children}</h4>
   ),
   h5: ({ children }) => (
-    <h5 className="text-sm font-bold mb-1">{children}</h5>
+    <h5 className="text-xs font-bold mb-1">{children}</h5>
   ),
   h6: ({ children }) => (
     <h6 className="text-xs font-bold mb-1">{children}</h6>
@@ -195,7 +195,7 @@ export const markdownComponents: Components = {
     </th>
   ),
   td: ({ children }) => (
-    <td className="px-4 py-3 whitespace-normal text-sm text-gray-900 dark:text-gray-100">
+    <td className="px-4 py-3 whitespace-normal text-xs text-gray-900 dark:text-gray-100">
       {children}
     </td>
   )
@@ -233,7 +233,7 @@ export const CollapsibleContent: React.FC<{
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white dark:to-zinc-800 opacity-70"></div>
             <button 
               onClick={() => setIsExpanded(true)} 
-              className="relative z-10 text-blue-500 hover:text-blue-700 text-sm font-medium transition-colors"
+              className="relative z-10 text-blue-500 hover:text-blue-700 text-xs font-medium transition-colors"
             >
               Show more ({(content.length - maxChars).toLocaleString()} characters folded)
             </button>
@@ -427,7 +427,7 @@ export const renderHTMLTable = (tableContent: string) => {
                           return (
                             <td
                               key={cellIdx}
-                              className={`px-3 py-2 whitespace-normal text-sm border-b dark:border-gray-700 ${
+                              className={`px-3 py-2 whitespace-normal text-xs border-b dark:border-gray-700 ${
                                 isHeaderCell ? 'font-medium' : ''
                               }`}
                             >

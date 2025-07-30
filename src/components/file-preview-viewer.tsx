@@ -5,12 +5,12 @@ import type { ParsedContent } from '../lib/parsers/base-file-parser'
 import { canvasService, type CanvasData } from '../lib/services/canvas-service'
 import { filePreviewService, type FilePreviewData } from '../lib/services/file-preview-service'
 import {
-    ExcelRenderer,
-    HtmlRenderer,
-    MarkdownRenderer,
-    PdfRenderer,
-    TextRenderer,
-    WordRenderer
+  ExcelRenderer,
+  HtmlRenderer,
+  MarkdownRenderer,
+  PdfRenderer,
+  TextRenderer,
+  WordRenderer
 } from './file-preview-renderers'
 
 interface FilePreviewViewerProps {
@@ -99,7 +99,7 @@ export function FilePreviewViewer({ canvasData, onError }: FilePreviewViewerProp
     return (
       <div className="text-center p-8 text-gray-500 dark:text-gray-400">
         <p>无法预览此文件</p>
-        <p className="text-sm mt-1">文件: {canvasData.fileName}</p>
+        <p className="text-xs mt-1">文件: {canvasData.fileName}</p>
       </div>
     )
   }
@@ -144,8 +144,8 @@ export function FilePreviewViewer({ canvasData, onError }: FilePreviewViewerProp
     return (
       <div className="text-center p-8 text-gray-500">
         <p>使用模拟数据模式</p>
-        <p className="text-sm">文件: {canvasData.fileName}</p>
-        <p className="text-sm">类型: {canvasData.fileType}</p>
+        <p className="text-xs">文件: {canvasData.fileName}</p>
+        <p className="text-xs">类型: {canvasData.fileType}</p>
       </div>
     )
   }
@@ -159,7 +159,7 @@ export function FilePreviewViewer({ canvasData, onError }: FilePreviewViewerProp
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage <= 1}
-          className="px-3 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-500"
+          className="px-3 py-1 text-xs bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-500"
         >
           上一页
         </button>
@@ -169,7 +169,7 @@ export function FilePreviewViewer({ canvasData, onError }: FilePreviewViewerProp
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage >= previewData.totalPages}
-          className="px-3 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-500"
+          className="px-3 py-1 text-xs bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-500"
         >
           下一页
         </button>

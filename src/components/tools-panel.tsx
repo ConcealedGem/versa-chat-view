@@ -197,7 +197,7 @@ export function ToolsPanel({ onStatusUpdate, currentAssistant, onRefreshTools }:
             </svg>
           </button>
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300" style={{ color: 'rgb(188, 195, 207)' }}>
-            🛠️ {currentAssistant?.name || '通用助手'} ({tools.length} Ability)
+            🛠️ {currentAssistant?.name || '通用助手'} ({tools.length} Ability Agent)
           </h3>
         </div>
         <button 

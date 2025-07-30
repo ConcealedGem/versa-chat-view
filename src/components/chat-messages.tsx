@@ -5,7 +5,6 @@ import { CollapsibleContent, markdownComponents, renderHTMLTable } from '@/lib/u
 import { cleanMarkdown, preprocessReasoning } from '@/lib/utils/markdown-utils'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
-import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import ReactMarkdown from 'react-markdown'
 import rehypeSanitize from 'rehype-sanitize'
 
@@ -15,18 +14,20 @@ export function ChatMessages({
   onQuerySelect: _onQuerySelect, // eslint-disable-line @typescript-eslint/no-unused-vars
   isLoading,
   chatId: _chatId, // eslint-disable-line @typescript-eslint/no-unused-vars
-  onRegenerate
+  onRegenerate,
+  isFullWidth = false,
+  showReasoning = false
 }: {
   messages: Message[]
   data?: unknown
-  onQuerySelect: (query: string) => void
+  onQuerySelect?: (query: string) => void
   isLoading: boolean
-  chatId: string
+  chatId?: string
   onRegenerate?: () => void
+  isFullWidth?: boolean
+  showReasoning?: boolean
 }) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const [showReasoning, setShowReasoning] = useState(true)
-  const [showReferences, setShowReferences] = useState(true)
   const [tooltipMessage, setTooltipMessage] = useState('')
   const [tooltipVisible, setTooltipVisible] = useState(false)
   const [welcomeTitle, setWelcomeTitle] = useState('欢迎使用聊天应用')
@@ -36,20 +37,12 @@ export function ChatMessages({
   // 从API获取欢迎消息配置和应用配置
   useEffect(() => {
     // 显示推理过程
-    const showProcess = process.env.NEXT_PUBLIC_SHOW_PROCESS === 'true'
-    // 显示参考来源
-    const showReferences = process.env.NEXT_PUBLIC_SHOW_REFERENCES === 'true'
-    console.log('SHOW_PROCESS:', showProcess)
     // 欢迎消息配置
     const welcomeTitle = process.env.NEXT_PUBLIC_WELCOME_TITLE || '欢迎使用聊天应用'
     // 显示话题说明
     const welcomeMessage = process.env.NEXT_PUBLIC_WELCOME_MESSAGE || '开始一个新的对话，发送消息开始聊天吧。'
 
 
-    if (localStorage.getItem('showProcess') === null) {
-      setShowReasoning(showProcess)
-    }
-    setShowReferences(showReferences)
     setWelcomeTitle(welcomeTitle)
     setWelcomeMessage(welcomeMessage)
 
@@ -63,22 +56,6 @@ export function ChatMessages({
     }
   }, [messages])
 
-  // 保存用户的显示设置到localStorage
-  const toggleShowReasoning = () => {
-    const newValue = !showReasoning;
-    setShowReasoning(newValue);
-    // 保存用户设置到localStorage
-    localStorage.setItem('showProcess', JSON.stringify(newValue));
-  }
-
-  // 从localStorage读取用户设置
-  useEffect(() => {
-    const savedSetting = localStorage.getItem('showProcess');
-    if (savedSetting !== null) {
-      setShowReasoning(JSON.parse(savedSetting));
-    }
-  }, []);
-
   // 处理图片点击放大
   const handleImageClick = (imageUrl: string) => {
     setPreviewImage(imageUrl)
@@ -91,15 +68,10 @@ export function ChatMessages({
 
   return (
     <div className="relative px-4">
-      <div className="absolute top-4 right-4 z-10">
-        <button
-          onClick={toggleShowReasoning}
-          className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors duration-200 flex items-center justify-center shadow-md"
-          title={showReasoning ? '隐藏思考过程' : '显示思考过程'}
-          aria-label="切换显示思考过程"
-        >
-          {showReasoning ? <FaEye size={16} /> : <FaEyeSlash size={16} />}
-        </button>
+      {/* 悬浮按钮组，右上角，横向排列 */}
+      <div className="absolute top-4 right-4 z-10 flex flex-row-reverse gap-2 items-center">
+        {/* 缩进/展开按钮由父组件渲染，这里只保留思考过程按钮 */}
+        {/* 删除原有的思考过程按钮渲染，仅保留消息内容渲染 */}
       </div>
 
       {messages.length === 0 ? (
@@ -208,7 +180,7 @@ export function ChatMessages({
                             className="object-cover opacity-70"
                           />
                         </div>
-                        <div className="rounded-lg px-4 py-2 w-full max-w-[90%] bg-white dark:bg-zinc-800 text-[#8b8b8b] dark:text-zinc-400 text-xs font-mono border border-gray-200 dark:border-zinc-700 shadow-sm">
+                        <div className={`rounded-lg px-4 py-2 ${isFullWidth ? 'w-full' : 'max-w-[90%]'} bg-white dark:bg-zinc-800 text-[#8b8b8b] dark:text-zinc-400 text-xs font-mono border border-gray-200 dark:border-zinc-700 shadow-sm`}>
                           <div className="prose prose-sm w-full dark:prose-invert max-w-none">
                             <CollapsibleContent
                               content={preprocessReasoning(message.reasoning)}
@@ -231,7 +203,8 @@ export function ChatMessages({
                           className="object-cover"
                         />
                       </div>
-                      <div className={`rounded-lg px-4 py-2 max-w-[90%] relative text-xs border shadow-sm ${
+                      <div className={`rounded-lg px-4 py-2 relative text-xs border shadow-sm ${
+                        isFullWidth ? 'w-full' : 'max-w-[90%]'} ${
                         message.isError 
                           ? 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border-red-200 dark:border-red-800'
                           : 'bg-white dark:bg-zinc-800 text-black dark:text-zinc-200 border-gray-200 dark:border-zinc-700'
@@ -341,7 +314,7 @@ export function ChatMessages({
                     </div>
                     
                     {/* 参考文件源区域 - 显示在消息底部 */}
-                    { showReferences && message.sources && message.sources.length > 0 && (
+                    { message.sources && message.sources.length > 0 && (
                       <div className={`${index === messages.length - 1 ? 'mt-8' : 'mt-2'} rounded-md py-2 mb-12 ml-10`}>
                         <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">Reference reasoning source：</p>
                         <div className="flex flex-wrap gap-2">

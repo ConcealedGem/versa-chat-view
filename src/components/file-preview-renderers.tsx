@@ -118,13 +118,13 @@ const renderMixedContent = (content: string) => {
 
   // 渲染混合内容
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-xs">
       {allBlocks.map((block, index) => {
         if (block.type === 'html') {
           return (
             <div key={`html-${index}`} className="html-block">
               <div 
-                className="html-preview overflow-auto"
+                className="html-preview overflow-auto text-xs"
                 style={{ fontFamily: 'inherit' }}
                 dangerouslySetInnerHTML={{ 
                   __html: sanitizeHtml(styleHtmlContent(block.content))
@@ -135,13 +135,15 @@ const renderMixedContent = (content: string) => {
         } else {
           return (
             <div key={`markdown-${index}`} className="markdown-block">
-              <ReactMarkdown
-                rehypePlugins={[rehypeSanitize]}
-                remarkPlugins={[remarkGfm]}
-                components={markdownComponents}
-              >
-                {cleanMarkdown(block.content)}
-              </ReactMarkdown>
+              <div className="text-xs">
+                <ReactMarkdown
+                  rehypePlugins={[rehypeSanitize]}
+                  remarkPlugins={[remarkGfm]}
+                  components={markdownComponents}
+                >
+                  {cleanMarkdown(block.content)}
+                </ReactMarkdown>
+              </div>
             </div>
           )
         }
@@ -195,13 +197,13 @@ export function TextRenderer({ parsedContent, currentPage, onPageChange: _onPage
 
   return (
     <div className="space-y-4">
-      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-sm">
+      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-xs">
         <div className="grid grid-cols-2 gap-4">
           <div>字符数: {content.charCount}</div>
           <div>行数: {content.lineCount}</div>
         </div>
       </div>
-      <div className="bg-white dark:bg-gray-900 p-4 rounded border font-mono text-sm whitespace-pre-wrap">
+      <div className="bg-white dark:bg-gray-900 p-4 rounded border font-mono text-xs whitespace-pre-wrap">
         {currentPageContent.text}
       </div>
     </div>
@@ -221,7 +223,7 @@ export function MarkdownRenderer({ parsedContent, currentPage: _currentPage, onP
   return (
     <div className="space-y-4">
       {/* 文档结构信息 */}
-      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-sm">
+      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-xs">
         <div className="grid grid-cols-3 gap-4">
           <div>章节数: {content.sections?.length || 0}</div>
           <div>标题数: {content.headings?.length || 0}</div>
@@ -233,7 +235,7 @@ export function MarkdownRenderer({ parsedContent, currentPage: _currentPage, onP
       {content.headings && content.headings.length > 0 && (
         <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded">
           <h4 className="font-medium mb-2">目录</h4>
-          <ul className="space-y-1 text-sm">
+          <ul className="space-y-1 text-xs">
             {content.headings.slice(0, 10).map((heading, index) => (
               <li key={index} style={{ marginLeft: `${(heading.level - 1) * 16}px` }}>
                 <span className="text-blue-600 dark:text-blue-400">
@@ -250,7 +252,7 @@ export function MarkdownRenderer({ parsedContent, currentPage: _currentPage, onP
 
             {/* Markdown渲染 - 智能混合渲染HTML和Markdown */}
       <div className="bg-white dark:bg-gray-900 p-4 rounded border">
-        <div className="prose prose-xs dark:prose-invert max-w-none">
+        <div className="prose prose-xs dark:prose-invert max-w-none text-xs">
           {renderMixedContent(content.rawContent)}
         </div>
       </div>
@@ -288,18 +290,18 @@ export function HtmlRenderer({ parsedContent }: RendererProps) {
   return (
     <div className="space-y-4">
       {/* HTML文档信息 */}
-      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-sm">
-        <div className="grid grid-cols-3 gap-4">
-          <div>标题: {content.title || '无标题'}</div>
-          <div>标签数: {content.structure?.headings?.length || 0}</div>
-          <div>链接数: {content.structure?.links?.length || 0}</div>
+              <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-xs">
+          <div className="grid grid-cols-3 gap-4">
+            <div>标题: {content.title || '无标题'}</div>
+            <div>标签数: {content.structure?.headings?.length || 0}</div>
+            <div>链接数: {content.structure?.links?.length || 0}</div>
+          </div>
+          <div className="grid grid-cols-3 gap-4 mt-2">
+            <div>图片数: {content.structure?.images?.length || 0}</div>
+            <div>表格数: {content.structure?.tables || 0}</div>
+            <div>样式数: {content.styles?.length || 0}</div>
+          </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 mt-2">
-          <div>图片数: {content.structure?.images?.length || 0}</div>
-          <div>表格数: {content.structure?.tables || 0}</div>
-          <div>样式数: {content.styles?.length || 0}</div>
-        </div>
-      </div>
 
       {/* HTML结构分析 */}
       {content.structure && (
@@ -308,8 +310,8 @@ export function HtmlRenderer({ parsedContent }: RendererProps) {
           
           {content.structure.headings && content.structure.headings.length > 0 && (
             <div className="mb-3">
-              <h5 className="text-sm font-medium mb-1">标题结构:</h5>
-              <ul className="space-y-1 text-sm">
+              <h5 className="text-xs font-medium mb-1">标题结构:</h5>
+              <ul className="space-y-1 text-xs">
                 {content.structure.headings.slice(0, 5).map((heading, index) => (
                   <li key={index}>
                     <span className="text-yellow-600 dark:text-yellow-400 font-mono">
@@ -327,8 +329,8 @@ export function HtmlRenderer({ parsedContent }: RendererProps) {
 
           {content.structure.links && content.structure.links.length > 0 && (
             <div>
-              <h5 className="text-sm font-medium mb-1">链接 (前5个):</h5>
-              <ul className="space-y-1 text-sm">
+              <h5 className="text-xs font-medium mb-1">链接 (前5个):</h5>
+              <ul className="space-y-1 text-xs">
                 {content.structure.links.slice(0, 5).map((link, index) => (
                   <li key={index} className="truncate">
                     <span className="text-blue-600 dark:text-blue-400">{link.text}</span>{' '}
@@ -349,7 +351,7 @@ export function HtmlRenderer({ parsedContent }: RendererProps) {
         </div>
         <div className="bg-white dark:bg-gray-900 p-4 rounded border overflow-auto max-h-96">
           <div 
-            className="html-preview"
+            className="html-preview text-xs"
             dangerouslySetInnerHTML={{ 
               __html: sanitizeHtml(content.rawHtml) 
             }} 
@@ -405,7 +407,7 @@ export function PdfRenderer({ parsedContent, currentPage, onPageChange }: Render
     <div className="space-y-4">
       {/* PDF文档信息 */}
       {content.documentInfo && (
-        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-sm">
+        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-xs">
           <div className="grid grid-cols-3 gap-4">
             <div>总页数: {content.documentInfo.numPages}</div>
             <div>文本页面: {textPages}</div>
@@ -427,7 +429,7 @@ export function PdfRenderer({ parsedContent, currentPage, onPageChange }: Render
 
       {/* 当前页面内容 */}
       <div className="bg-white dark:bg-gray-900 p-4 rounded border">
-        <div className={`whitespace-pre-wrap text-sm ${currentPageContent.error ? 'text-red-600' : ''}`}>
+        <div className={`whitespace-pre-wrap text-xs ${currentPageContent.error ? 'text-red-600' : ''}`}>
           {currentPageContent.text}
         </div>
         
@@ -475,12 +477,12 @@ export function ExcelRenderer({ parsedContent }: RendererProps) {
   return (
     <div className="space-y-3">
       {/* 工作表信息 */}
-      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-sm">
-        <div className="grid grid-cols-3 gap-4">
-          <div>总行数: {currentSheet.rowCount}</div>
-          <div>显示行数: {currentSheet.displayedRowCount || currentSheet.data.length}</div>
-          <div>列数: {currentSheet.colCount}</div>
-        </div>
+              <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-xs">
+          <div className="grid grid-cols-3 gap-4">
+            <div>总行数: {currentSheet.rowCount}</div>
+            <div>显示行数: {currentSheet.displayedRowCount || currentSheet.data.length}</div>
+            <div>列数: {currentSheet.colCount}</div>
+          </div>
         {currentSheet.isLimited && (
                      <div className="mt-2 p-2 bg-blue-100 dark:bg-blue-900/30 rounded text-blue-800 dark:text-blue-200">
              <div className="flex items-center gap-2">
@@ -500,7 +502,7 @@ export function ExcelRenderer({ parsedContent }: RendererProps) {
           {content.sheets.map((sheet, index) => (
             <button
               key={index}
-              className={`px-3 py-1 text-sm rounded ${
+              className={`px-3 py-1 text-xs rounded ${
                 index === (content.activeSheet || 0)
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
@@ -555,7 +557,7 @@ export function WordRenderer({ parsedContent, currentPage, onPageChange }: Rende
   return (
     <div className="space-y-4">
       {content.wordCount !== undefined && (
-        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-sm">
+        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded text-xs">
           <div className="grid grid-cols-2 gap-4">
             <div>字数: {content.wordCount}</div>
             <div>段落数: {content.paragraphCount || 0}</div>
@@ -563,7 +565,7 @@ export function WordRenderer({ parsedContent, currentPage, onPageChange }: Rende
         </div>
       )}
       
-      <div className="bg-white dark:bg-gray-900 p-4 rounded border prose dark:prose-invert max-w-none">
+      <div className="bg-white dark:bg-gray-900 p-4 rounded border prose dark:prose-invert max-w-none text-xs">
         <div 
           dangerouslySetInnerHTML={{ 
             __html: hasPages && currentPageContent?.htmlContent 

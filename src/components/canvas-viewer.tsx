@@ -12,6 +12,7 @@ export function CanvasViewer() {
   const [canvasItems, setCanvasItems] = useState<CanvasData[]>([])
   const [hasNewCanvas, setHasNewCanvas] = useState(false)
   const [zoomedImageUrl, setZoomedImageUrl] = useState<string | null>(null)
+  const [iframeHeights, setIframeHeights] = useState<Record<string, number>>({})
   const canvasContainerRef = useRef<HTMLDivElement>(null)
 
   // 处理新的canvas内容
@@ -73,6 +74,29 @@ export function CanvasViewer() {
   // 切换canvas项的展开/收缩状态
   const handleToggleCanvas = (id: string) => {
     canvasService.toggleCanvas(id)
+  }
+
+  // 处理iframe高度自适应
+  const handleIframeLoad = (id: string, event: React.SyntheticEvent<HTMLIFrameElement>) => {
+    try {
+      const iframe = event.currentTarget
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
+      
+      if (iframeDoc) {
+        const height = iframeDoc.body.scrollHeight || iframeDoc.documentElement.scrollHeight
+        setIframeHeights(prev => ({
+          ...prev,
+          [id]: Math.min(height + 20, 800) // 最大高度800px，避免过高
+        }))
+      }
+    } catch (error) {
+      // 跨域限制时使用默认高度
+      console.warn('无法获取iframe内容高度，使用默认高度:', error)
+      setIframeHeights(prev => ({
+        ...prev,
+        [id]: 400
+      }))
+    }
   }
 
   // 自定义代码块渲染组件
@@ -170,10 +194,15 @@ export function CanvasViewer() {
               {hasScript ? (
                 // 使用iframe渲染包含脚本的HTML，允许JavaScript执行
                 <iframe
-                  className="w-full h-96 border-0 rounded"
+                  className="w-full border-0 rounded"
+                  style={{ 
+                    height: `${iframeHeights[item.id] || 400}px`,
+                    minHeight: '200px'
+                  }}
                   srcDoc={item.source}
                   title={`HTML Canvas ${index + 1}`}
                   sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                  onLoad={(e) => handleIframeLoad(item.id, e)}
                 />
               ) : (
                 // 使用dangerouslySetInnerHTML渲染静态HTML
@@ -355,7 +384,7 @@ export function CanvasViewer() {
 
         <div className="text-center text-gray-500 dark:text-gray-400">
           <p>暂无Canvas内容</p>
-          <p className="text-xs">当聊天中收到canvas消息时，内容将显示在这里</p>
+          <p className="text-xs">当对话中收到canvas消息时，内容将显示在这里</p>
         </div>
       </div>
     )
@@ -478,7 +507,7 @@ export function CanvasViewer() {
       {canvasItems.length === 0 && !zoomedImageUrl && (
          <div className="text-center text-gray-500 dark:text-gray-400">
           <p>暂无Canvas内容</p>
-          <p className="text-xs">当聊天中收到canvas消息时，内容将显示在这里</p>
+          <p className="text-xs">当对话中收到canvas消息时，内容将显示在这里</p>
         </div>
       )}
     </div>

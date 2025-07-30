@@ -20,7 +20,8 @@ export function ChatPanel({
   query,
   append,
   models,
-  sendMessage
+  sendMessage,
+  isFullWidth = false
 }: {
   input: string
   handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
@@ -33,6 +34,7 @@ export function ChatPanel({
   append: (message: Message) => void
   models?: Model[]
   sendMessage?: (message: Message) => Promise<void>
+  isFullWidth?: boolean
 }) {
   const [selectedModel, setSelectedModel] = useState<string>(
     models?.[0]?.id || ''
@@ -306,7 +308,7 @@ export function ChatPanel({
       />
 
       <div className="inset-x-0 bg-white dark:bg-zinc-900 pt-2 pb-3">
-        <div className="max-w-full mx-auto px-4">
+        <div className={isFullWidth ? 'w-full' : 'max-w-full mx-auto px-4'}>
           {query && messages.length === 0 && (
             <div className="mb-4">
               <button
