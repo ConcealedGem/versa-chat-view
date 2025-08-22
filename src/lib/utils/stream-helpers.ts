@@ -94,11 +94,20 @@ export async function processStream(
                 data.content = ' . '
               }
               // 更新推理内容
-              // 去除末尾换行符，避免过多换行
-              const cleanContent = typeof data.content === 'string' ? data.content.replace(/\n+$/, '') : JSON.stringify(data.content)
+              // 保留换行符，但避免重复的换行
+              const cleanContent = typeof data.content === 'string' ? data.content : JSON.stringify(data.content)
               
-              // 始终拼接内容，而不是替换
-              reasoningContent += cleanContent
+              // 如果是第一个内容，直接使用；否则检查是否需要添加换行分隔
+              if (reasoningContent === '') {
+                reasoningContent = cleanContent
+              } else {
+                // 如果当前内容以换行开头，直接拼接；否则添加一个换行分隔
+                if (cleanContent.startsWith('\n')) {
+                  reasoningContent += cleanContent
+                } else {
+                  reasoningContent += '\n' + cleanContent
+                }
+              }
               
               options.setReasoning?.(reasoningContent)
 
@@ -116,9 +125,22 @@ export async function processStream(
               break
 
             case 'content':
-              // 累积内容
-              completedContent += data.content
-              console.log('Processing content:', data.content, 'Total so far:', completedContent)
+              // 累积内容，正确处理换行
+              const contentToAdd = typeof data.content === 'string' ? data.content : JSON.stringify(data.content)
+              
+              // 如果是第一个内容，直接使用；否则检查是否需要添加换行分隔
+              if (completedContent === '') {
+                completedContent = contentToAdd
+              } else {
+                // 如果当前内容以换行开头，直接拼接；否则添加一个换行分隔
+                if (contentToAdd.startsWith('\n')) {
+                  completedContent += contentToAdd
+                } else {
+                  completedContent += '\n' + contentToAdd
+                }
+              }
+              
+              console.log('Processing content:', contentToAdd, 'Total so far:', completedContent)
               options.setCompletedContent?.(completedContent)
 
               // 更新消息内容

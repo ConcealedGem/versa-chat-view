@@ -128,7 +128,7 @@ export async function sendChatMessage({
     } else {
       console.log('No token found, cannot send chat message')
     }
-    const response = await fetch('http://localhost:8000/api/agent/react', {
+    const response = await fetch('http://localhost:8000/api/chat/stream', {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({
@@ -241,7 +241,7 @@ export function regenerateMessage({
   setIsLoading(true)
 
   // 发送API请求
-  fetch('http://localhost:8000/api/agent/react', {
+  fetch('http://localhost:8000/api/chat/stream', {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({

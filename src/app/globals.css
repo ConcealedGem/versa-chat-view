@@ -1,35 +1,72 @@
 @import "tailwindcss";
 
-:root {
-  /* --background: #ffffff;
-  --foreground: #171717; */
-  --foreground: #ffffff;
-  --background: #171717;
-}
+@variant dark (.dark &);
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    /* --background: #0a0a0a;
-    --foreground: #ededed; */
-    --foreground: #0a0a0a;
-    --background: #ededed;
-  }
+html {
+  /* 确保 HTML 元素有背景色 */
+  background-color: white;
+  color: black;
+}
+
+html.dark {
+  background-color: rgb(24 24 27); /* zinc-900 */
+  color: white;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* 继承 HTML 的背景和颜色 */
+  background-color: inherit;
+  color: inherit;
 }
 
 /* 隐藏Next.js生成的portal元素 */
 nextjs-portal {
   display: none !important;
+}
+
+/* 确保主题切换平滑过渡 */
+html {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* 强制深色模式样式 */
+html.dark {
+  color-scheme: dark;
+}
+
+/* 强制浅色模式样式 */
+html.light {
+  color-scheme: light;
+}
+
+/* 确保主要容器也有正确的背景色 */
+.dark .bg-white {
+  background-color: rgb(24 24 27) !important; /* zinc-900 */
+}
+
+.dark .dark\:bg-zinc-900 {
+  background-color: rgb(24 24 27) !important;
+}
+
+.dark .text-black {
+  color: white !important;
+}
+
+.dark .dark\:text-white {
+  color: white !important;
+}
+
+/* 浅色模式强制样式 */
+.light .bg-white {
+  background-color: white !important;
+}
+
+.light .text-black {
+  color: black !important;
 }

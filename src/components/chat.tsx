@@ -39,7 +39,7 @@ export function Chat({
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
 
   // 新增：思考过程显示状态
-  const [showReasoning, setShowReasoning] = useState(false)
+  const [showReasoning, setShowReasoning] = useState(true)
   const toggleShowReasoning = () => setShowReasoning(v => !v)
 
   const {

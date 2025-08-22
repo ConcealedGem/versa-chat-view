@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { useTheme, type Theme } from './theme-provider'
 
 interface Assistant {
   id: string
@@ -33,7 +34,12 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
   const [assistants, setAssistants] = useState<Assistant[]>([])
   const [activeAssistant, setActiveAssistant] = useState<Assistant | null>(null)
   const [showAssistantSubmenu, setShowAssistantSubmenu] = useState(false)
+  const { theme, appliedTheme, toggleTheme } = useTheme()
   const menuRef = useRef<HTMLDivElement>(null)
+
+
+
+  // 主题相关逻辑现在由 ThemeProvider 处理
 
   // 获取助手列表
   const fetchAssistants = useCallback(async () => {
@@ -201,7 +207,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
 
       {/* 下拉菜单 */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg z-50">
+        <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg z-50 pointer-events-auto">
           <div className="py-1">
           
 
@@ -263,6 +269,57 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
             {/* 分割线 */}
             <div className="border-t border-gray-200 dark:border-zinc-700 my-1" />
 
+            {/* 主题切换 */}
+            <button
+              onClick={() => {
+                toggleTheme()
+                const themeNames: Record<Theme, string> = {
+                  light: '浅色模式',
+                  dark: '深色模式',
+                  system: '跟随系统'
+                }
+                // 计算下一个主题名称
+                const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light'
+                toast.success(`已切换到${themeNames[nextTheme]}`)
+                setIsOpen(false)
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors flex items-center justify-between"
+            >
+              <span>主题模式</span>
+              <div className="flex items-center space-x-2">
+                {/* 太阳图标 (浅色模式) */}
+                <svg
+                  className={`w-4 h-4 ${appliedTheme === 'light' ? 'text-yellow-500' : 'text-gray-400'}`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+                </svg>
+                {/* 月亮图标 (深色模式) */}
+                <svg
+                  className={`w-4 h-4 ${appliedTheme === 'dark' ? 'text-blue-500' : 'text-gray-400'}`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                </svg>
+                {/* 系统图标 (系统模式) */}
+                <svg
+                  className={`w-4 h-4 ${theme === 'system' ? 'text-green-500' : 'text-gray-400'}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </button>
+
+           
+
+            {/* 分割线 */}
+            <div className="border-t border-gray-200 dark:border-zinc-700 my-1" />
+
             {/* 清空缓存 */}
             <button
               onClick={handleClearCache}
@@ -270,6 +327,9 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
             >
               清空缓存
             </button>
+
+             {/* 分割线 */}
+             <div className="border-t border-gray-200 dark:border-zinc-700 my-1" />
               {/* 登录/退出 */}
               <button
               onClick={handleAuthAction}

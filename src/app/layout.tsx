@@ -1,6 +1,9 @@
 import { GeistSans } from 'geist/font';
 import { GeistMono } from 'geist/font/mono';
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeScript } from "@/components/theme-script";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,8 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <head>
+        <ThemeScript />
+      </head>
       <body>
-        {children}
+        <ThemeProvider>
+          {children}
+          <Toaster richColors />
+        </ThemeProvider>
       </body>
     </html>
   );
