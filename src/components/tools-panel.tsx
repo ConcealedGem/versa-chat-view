@@ -177,7 +177,7 @@ export function ToolsPanel({ onStatusUpdate, currentAssistant, onRefreshTools }:
   }
 
   return (
-    <div className="fixed-tools-panel bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm relative z-0">
       {/* 工具面板头部 */}
       <div className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-t-lg">
         <div className="flex items-center space-x-2">

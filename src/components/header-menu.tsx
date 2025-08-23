@@ -207,7 +207,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
 
       {/* 下拉菜单 */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg z-50 pointer-events-auto">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white/95 dark:bg-neutral-800/95 border border-neutral-200/50 dark:border-neutral-700/50 rounded-xl shadow-2xl backdrop-blur-lg z-[9999] pointer-events-auto overflow-hidden">
           <div className="py-1">
           
 
@@ -215,11 +215,13 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
             <div className="relative">
               <button
                 onClick={handleAssistantMenu}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors flex items-center justify-between"
+                className="w-full text-left px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100/80 dark:hover:bg-neutral-700/50 transition-all duration-200 flex items-center justify-between group"
               >
-                <span>切换助手 ({assistants.length})</span>
+                <span className="font-medium">切换助手 ({assistants.length})</span>
                 <svg
-                  className={`w-4 h-4 transition-transform ${showAssistantSubmenu ? 'rotate-180' : ''}`}
+                  className={`w-4 h-4 transition-all duration-200 group-hover:scale-110 ${
+                    showAssistantSubmenu ? 'rotate-180 text-blue-500' : 'text-neutral-400'
+                  }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -230,7 +232,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
 
               {/* 助手子菜单 */}
               {showAssistantSubmenu && (
-                <div className="mt-1 w-full bg-gray-50 dark:bg-zinc-700 border border-gray-200 dark:border-zinc-600 rounded-md">
+                <div className="mt-1 w-full bg-white/95 dark:bg-neutral-700/95 border border-neutral-200/50 dark:border-neutral-600/50 rounded-lg backdrop-blur-md shadow-xl z-[10000]">
                   <div className="py-1">
                     {activeAssistant && (
                       <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-zinc-600">

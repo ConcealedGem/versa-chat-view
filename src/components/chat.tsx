@@ -310,30 +310,30 @@ export function Chat({
   }, [isDragging, handleMouseMove, handleMouseUp])
 
   return (
-    <div ref={containerRef} className="flex h-screen w-full bg-white dark:bg-zinc-900"> {/* Main container: horizontal flex, full screen height */}
+    <div ref={containerRef} className="flex h-screen w-full bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800"> {/* Main container: horizontal flex, full screen height */}
       {/* 左侧面板（动态宽度或全宽） */}
       <div
-        className="relative flex flex-col h-full border-r border-gray-200 dark:border-zinc-700"
+        className="relative flex flex-col h-full border-r border-neutral-200/50 dark:border-neutral-700/50 backdrop-blur-sm"
         style={{ width: rightPanelCollapsed ? '100%' : `${leftPanelWidth}%` }}
       >
         {/* 悬浮按钮组，右上角，横向排列 */}
-        <div className="absolute top-2 right-2 z-50 flex flex-row-reverse gap-2 items-center">
+        <div className="absolute top-4 right-4 z-50 flex flex-row-reverse gap-3 items-center">
           {/* 缩进/展开按钮 */}
           <button
             onClick={() => setRightPanelCollapsed(v => !v)}
-            className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors duration-200 flex items-center justify-center shadow-md"
+            className="p-3 rounded-xl bg-white/90 dark:bg-neutral-800/90 text-neutral-600 dark:text-neutral-300 hover:bg-white dark:hover:bg-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-100 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl backdrop-blur-md border border-neutral-200/50 dark:border-neutral-700/50 hover:scale-105"
             title={rightPanelCollapsed ? '展开右侧' : '收起右侧'}
           >
             {rightPanelCollapsed ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
             ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             )}
           </button>
           {/* 思考过程按钮 */}
           <button
             onClick={toggleShowReasoning}
-            className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors duration-200 flex items-center justify-center shadow-md"
+            className="p-3 rounded-xl bg-white/90 dark:bg-neutral-800/90 text-neutral-600 dark:text-neutral-300 hover:bg-white dark:hover:bg-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-100 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl backdrop-blur-md border border-neutral-200/50 dark:border-neutral-700/50 hover:scale-105"
             title={showReasoning ? '隐藏思考过程' : '显示思考过程'}
             aria-label="切换显示思考过程"
           >
@@ -341,7 +341,7 @@ export function Chat({
           </button>
         </div>
         {/* Chat Messages Area (Scrollable) */}
-        <div className="flex-grow overflow-y-auto pt-14"> {/* pt-14 to maintain top spacing */}
+        <div className="flex-grow overflow-y-auto pt-20 px-1"> {/* pt-20 to maintain top spacing, px-1 for elegant scrollbar */}
           <ChatMessages
             messages={messages}
             data={data}
@@ -355,7 +355,7 @@ export function Chat({
         </div>
 
         {/* Chat Panel Area (at the bottom of Left Panel) */}
-        <div className="border-t border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+        <div className="border-t border-neutral-200/50 dark:border-neutral-700/50 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md">
           <ChatPanel
             input={input}
             handleInputChange={handleInputChange}
@@ -376,14 +376,14 @@ export function Chat({
       {!rightPanelCollapsed && (
         <>
           <div
-            className={`w-1 bg-gray-200 dark:bg-zinc-700 hover:bg-blue-400 dark:hover:bg-blue-500 cursor-col-resize transition-colors relative group ${isDragging ? 'bg-blue-500 dark:bg-blue-400' : ''}`}
+            className={`w-1 bg-neutral-200 dark:bg-neutral-700 hover:bg-blue-400 dark:hover:bg-blue-500 cursor-col-resize transition-all duration-300 relative group ${isDragging ? 'bg-blue-500 dark:bg-blue-400' : ''}`}
             onMouseDown={handleMouseDown}
           >
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-8 bg-gray-400 dark:bg-gray-600 group-hover:bg-blue-600 dark:group-hover:bg-blue-300 transition-colors rounded-full opacity-0 group-hover:opacity-100" />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-12 bg-neutral-400 dark:bg-neutral-600 group-hover:bg-blue-500 dark:group-hover:bg-blue-400 transition-all duration-300 rounded-full opacity-0 group-hover:opacity-100" />
           </div>
           <div className="flex flex-col h-full" style={{ width: `${100 - leftPanelWidth}%` }}>
-            <div className="p-3 border-b border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 shadow-sm flex justify-between items-center">
-              <h2 className="text-base font-semibold text-gray-800 dark:text-gray-200">Observability is essential to agency.</h2>
+            <div className="p-4 border-b border-neutral-200/50 dark:border-neutral-700/50 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-md shadow-sm flex justify-between items-center relative z-50">
+              <h2 className="text-lg font-semibold text-neutral-800 dark:text-neutral-200 tracking-tight">Observability is essential to agency.</h2>
               <HeaderMenu
                 onLogin={() => setShowLoginModal(true)}
                 onLogout={() => {
@@ -406,14 +406,14 @@ export function Chat({
                 }}
               />
             </div>
-            <div className="flex-shrink-0 p-3 border-b border-gray-200 dark:border-zinc-700">
+            <div className="flex-shrink-0 p-4 border-b border-neutral-200/50 dark:border-neutral-700/50 bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm relative z-10">
               <ToolsPanel
                 onStatusUpdate={handleToolStatusUpdate}
                 currentAssistant={currentAssistant || undefined}
                 onRefreshTools={handleRefreshTools}
               />
             </div>
-            <div className="flex-grow overflow-auto p-4">
+            <div className="flex-grow overflow-auto p-6 bg-gradient-to-b from-white/30 to-neutral-50/30 dark:from-neutral-800/30 dark:to-neutral-900/30">
               <CanvasViewer />
             </div>
           </div>
