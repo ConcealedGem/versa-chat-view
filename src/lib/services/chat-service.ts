@@ -1,4 +1,5 @@
 import { Message } from '../hooks/use-chat'
+import { getReactApiUrl } from '../utils/api-config'
 import { processStream } from '../utils/stream-helpers'
 
 // 获取认证token并创建headers
@@ -128,7 +129,7 @@ export async function sendChatMessage({
     } else {
       console.log('No token found, cannot send chat message')
     }
-    const response = await fetch('http://localhost:8000/api/chat/stream', {
+    const response = await fetch(getReactApiUrl(), {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({
@@ -241,7 +242,7 @@ export function regenerateMessage({
   setIsLoading(true)
 
   // 发送API请求
-  fetch('http://localhost:8000/api/chat/stream', {
+  fetch(getReactApiUrl(), {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({

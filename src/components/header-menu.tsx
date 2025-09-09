@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { ApiConfigModal } from './api-config-modal'
 import { useTheme, type Theme } from './theme-provider'
 
 interface Assistant {
@@ -34,6 +35,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
   const [assistants, setAssistants] = useState<Assistant[]>([])
   const [activeAssistant, setActiveAssistant] = useState<Assistant | null>(null)
   const [showAssistantSubmenu, setShowAssistantSubmenu] = useState(false)
+  const [showApiConfigModal, setShowApiConfigModal] = useState(false)
   const { theme, appliedTheme, toggleTheme } = useTheme()
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -101,7 +103,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
   // 初始化时获取助手列表
   useEffect(() => {
     fetchAssistants()
-  }, [])
+  }, [fetchAssistants])
 
   // 点击外部关闭菜单
   useEffect(() => {
@@ -178,6 +180,12 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
     setIsOpen(false)
   }
 
+  // 处理API配置
+  const handleApiConfig = () => {
+    setShowApiConfigModal(true)
+    setIsOpen(false)
+  }
+
   // 处理切换助手菜单
   const handleAssistantMenu = () => {
     console.log('点击切换助手菜单，当前助手数量:', assistants.length)
@@ -217,7 +225,17 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
                 onClick={handleAssistantMenu}
                 className="w-full text-left px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100/80 dark:hover:bg-neutral-700/50 transition-all duration-200 flex items-center justify-between group"
               >
-                <span className="font-medium">切换助手 ({assistants.length})</span>
+                <div className="flex items-center">
+                  <svg
+                    className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <span className="font-medium">切换助手 ({assistants.length})</span>
+                </div>
                 <svg
                   className={`w-4 h-4 transition-all duration-200 group-hover:scale-110 ${
                     showAssistantSubmenu ? 'rotate-180 text-blue-500' : 'text-neutral-400'
@@ -287,7 +305,17 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
               }}
               className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors flex items-center justify-between"
             >
-              <span>主题模式</span>
+              <div className="flex items-center">
+                <svg
+                  className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4 4 4 0 004-4V5z" />
+                </svg>
+                <span>主题模式</span>
+              </div>
               <div className="flex items-center space-x-2">
                 {/* 太阳图标 (浅色模式) */}
                 <svg
@@ -317,16 +345,42 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
               </div>
             </button>
 
-           
-
             {/* 分割线 */}
             <div className="border-t border-gray-200 dark:border-zinc-700 my-1" />
+
+            {/* API配置 */}
+            <button
+              onClick={handleApiConfig}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors flex items-center"
+            >
+              <svg
+                className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              API配置
+            </button>
+            
+             {/* 分割线 */}
+             <div className="border-t border-gray-200 dark:border-zinc-700 my-1" />
 
             {/* 清空缓存 */}
             <button
               onClick={handleClearCache}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors"
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors flex items-center"
             >
+              <svg
+                className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
               清空缓存
             </button>
 
@@ -335,13 +389,43 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
               {/* 登录/退出 */}
               <button
               onClick={handleAuthAction}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors"
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors flex items-center"
             >
-              {isLoggedIn ? '退出登录' : '退出系统'}
+              {isLoggedIn ? (
+                <>
+                  <svg
+                    className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  退出登录
+                </>
+              ) : (
+                <>
+                  <svg
+                    className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                  退出系统
+                </>
+              )}
             </button>
           </div>
         </div>
       )}
+
+      {/* API配置模态框 */}
+      <ApiConfigModal 
+        isOpen={showApiConfigModal} 
+        onClose={() => setShowApiConfigModal(false)} 
+      />
     </div>
   )
 }
