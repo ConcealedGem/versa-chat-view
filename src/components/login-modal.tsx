@@ -64,57 +64,91 @@ export function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps)
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">Login</h2>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+      <div 
+        className="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl animate-scale-in border border-neutral-200 dark:border-neutral-700"
+        style={{
+          width: '400px',
+          minWidth: '320px',
+          maxWidth: '90vw',
+          padding: '32px'
+        }}
+      >
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">登录</h2>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">请输入您的登录凭据</p>
+        </div>
         
         {error && (
-          <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 text-red-700 dark:text-red-300 rounded-lg text-sm">
             {error}
           </div>
         )}
         
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              UserName
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+              用户名
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200"
+              className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-600 
+                         bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100
+                         focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                         placeholder-neutral-500 dark:placeholder-neutral-400
+                         transition-all duration-200"
+              placeholder="请输入用户名"
               required
             />
           </div>
           
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              PassWord
+          <div>
+            <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+              密码
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border border-zinc-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200"
+              className="w-full px-4 py-3 rounded-lg border border-neutral-300 dark:border-neutral-600 
+                         bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100
+                         focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                         placeholder-neutral-500 dark:placeholder-neutral-400
+                         transition-all duration-200"
+              placeholder="请输入密码"
               required
             />
           </div>
           
-          <div className="flex justify-between">
+          <div className="flex gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 rounded-md hover:bg-zinc-300 dark:hover:bg-zinc-600"
+              className="flex-1 px-4 py-3 bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 
+                         rounded-lg font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-600 
+                         transition-all duration-200 transform hover:scale-[0.98]"
             >
-              Cancel
+              取消
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
+              className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400
+                         text-white rounded-lg font-semibold 
+                         transition-all duration-200 transform hover:scale-[0.98]
+                         disabled:cursor-not-allowed disabled:transform-none
+                         focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-800"
             >
-              {isLoading ? 'Logging in ...' : 'Login'}
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  登录中...
+                </div>
+              ) : (
+                '登录'
+              )}
             </button>
           </div>
         </form>
