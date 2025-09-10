@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 interface UploadLoadingOverlayProps {
   isVisible: boolean
@@ -54,9 +55,34 @@ export function UploadLoadingOverlay({
     return `${Math.floor(seconds / 60)}分${seconds % 60}秒`
   }
 
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 mx-4 max-w-md w-full border border-gray-200 dark:border-gray-700">
+  const modalContent = (
+    <div 
+      style={{ 
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(4px)',
+        zIndex: 99999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem'
+      }}
+    >
+      <div 
+        style={{ 
+          borderRadius: '12px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          padding: '2rem',
+          width: '100%',
+          maxWidth: '28rem',
+          minWidth: '20rem'
+        }}
+        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+      >
         {/* 标题 */}
         <div className="text-center mb-6">
           <div className="flex items-center justify-center mb-4">
@@ -156,4 +182,7 @@ export function UploadLoadingOverlay({
       </div>
     </div>
   )
+
+  // 使用portal渲染到body
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null
 } 

@@ -3,6 +3,23 @@
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
+// 获取认证token并创建headers
+function getAuthHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  }
+  
+  // 确保代码在浏览器环境中运行
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token')
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+  }
+  
+  return headers
+}
+
 // 工具接口类型定义
 interface ToolField {
   name: string
@@ -45,7 +62,10 @@ export function ToolsPanel({ onStatusUpdate, currentAssistant, onRefreshTools }:
     console.log('ToolsPanel: loadTools 开始执行');
     setIsLoading(true)
     try {
-      const response = await fetch('/api/agent/tools')
+      const response = await fetch('/api/agent/tools', {
+        method: 'GET',
+        headers: getAuthHeaders()
+      })
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -72,9 +92,7 @@ export function ToolsPanel({ onStatusUpdate, currentAssistant, onRefreshTools }:
     try {
       const response = await fetch(`/api/agent/tools/${toolName}`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: getAuthHeaders()
       })
       
       if (!response.ok) {

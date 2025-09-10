@@ -5,6 +5,23 @@ import { toast } from 'sonner'
 import { ApiConfigModal } from './api-config-modal'
 import { useTheme, type Theme } from './theme-provider'
 
+// 获取认证token并创建headers
+function getAuthHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  }
+  
+  // 确保代码在浏览器环境中运行
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token')
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+  }
+  
+  return headers
+}
+
 interface Assistant {
   id: string
   name: string
@@ -47,7 +64,10 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
   const fetchAssistants = useCallback(async () => {
     try {
       console.log('开始获取助手列表...')
-      const response = await fetch('/api/assistants')
+      const response = await fetch('/api/assistants', {
+        method: 'GET',
+        headers: getAuthHeaders()
+      })
       const data: AssistantsResponse = await response.json()
       
       console.log('助手 API 响应:', data)
@@ -125,9 +145,7 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
     try {
       const response = await fetch('/api/assistants/switch', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ 'assistant-id': assistantId })
       })
       
@@ -140,7 +158,10 @@ export function HeaderMenu({ onLogin, onLogout, onClearCache, onAssistantChange 
         
         // 获取切换后的助手信息并通知父组件
         try {
-          const assistantResponse = await fetch('/api/assistants')
+          const assistantResponse = await fetch('/api/assistants', {
+            method: 'GET',
+            headers: getAuthHeaders()
+          })
           const assistantData = await assistantResponse.json()
           
           if (assistantData.success && assistantData.data.active) {

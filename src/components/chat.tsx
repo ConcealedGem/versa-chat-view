@@ -14,6 +14,23 @@ import { HeaderMenu } from './header-menu'
 import { LoginModal } from './login-modal'
 import { ToolsPanel } from './tools-panel'
 
+// 获取认证token并创建headers
+function getAuthHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  }
+  
+  // 确保代码在浏览器环境中运行
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token')
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+  }
+  
+  return headers
+}
+
 export function Chat({
   id,
   savedMessages = [],
@@ -115,7 +132,10 @@ export function Chat({
   // 获取当前助手信息
   const fetchCurrentAssistant = useCallback(async () => {
     try {
-      const response = await fetch('/api/assistants')
+      const response = await fetch('/api/assistants', {
+        method: 'GET',
+        headers: getAuthHeaders()
+      })
       const data = await response.json()
       
       if (data.success && data.data.active) {
